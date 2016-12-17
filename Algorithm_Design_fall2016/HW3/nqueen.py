@@ -35,3 +35,4 @@ queens = [0 for _ in range(n)]
 job_done = False
 
 backTrack(-1)
+print("***************")

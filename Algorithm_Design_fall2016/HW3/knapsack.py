@@ -36,7 +36,7 @@ def calcBound2(n, W, t, index):
     return totalP
 
 
-n= 20
+n = 20
 W = 30
 
 w = [random.randint(1, 10)   for _ in range(n)]
@@ -64,5 +64,4 @@ bound = calcBound2(n, W, t, 0)
 print("Second Bound : ", bound)
 print("Best ProFit", branchAndBound(n, t, W, 0, 0, 0, 0, calcBound2))
 print("Node That Seen : ", cout)
-
-# showKnapsack()
+print("***************")
