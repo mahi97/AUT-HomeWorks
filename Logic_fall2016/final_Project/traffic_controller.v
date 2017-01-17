@@ -1,6 +1,6 @@
 `include "out.v"
 `include "man.v"
-`include "auto1.v"
+`include "auto.v"
 `include "noTraffic.v"
 `include "bcd_counter.v"
 
