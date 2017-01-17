@@ -1,4 +1,4 @@
-module auto(reset, CLK, timeout, load_msb, load_lsb, load_trg, lightA, lightB); //this state's for debugging
+module auto(reset, CLK, timeout, load_msb, load_lsb, load_trg, lightA, lightB);
   input  reset;
   input  CLK;
   input  timeout;
@@ -7,15 +7,11 @@ module auto(reset, CLK, timeout, load_msb, load_lsb, load_trg, lightA, lightB); 
   output reg lightA;
   output reg lightB;
   output reg load_trg;
-  reg [1:0] state; //outputted for debugging
+  reg [1:0] state; 
 
   always @(reset)
     begin
       state = 0;
-      //load_lsb = 4'b0000; //0
-      //load_msb = 4'b1001; //9
-      //lightA   = 1;
-      //lightB   = 0;
       load_trg = 1;
     end
 

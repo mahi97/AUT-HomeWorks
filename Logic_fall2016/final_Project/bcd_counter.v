@@ -1,4 +1,5 @@
-module bcdCntr (bcdOut,count,underflow,loadtrg,load,clk);
+module bcdCntr (bcdOut, count, underflow, loadtrg, load, clk);
+
   input count,loadtrg,clk;
   input [3:0] load;
   output reg [3:0] bcdOut;
@@ -29,9 +30,7 @@ module bcdCntr (bcdOut,count,underflow,loadtrg,load,clk);
         underflow=1;
       else
         underflow=0;
-
       
     end 
-    
   end
 endmodule

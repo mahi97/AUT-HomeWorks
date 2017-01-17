@@ -1,8 +1,8 @@
-module noTraffic (timeout,AisGreen,BisGreen,AisFull,BisFull,clk); //emptiness is called an output just for debugging
-  input AisGreen,BisGreen,AisFull,BisFull,clk;
+module noTraffic (timeout, AisGreen, BisGreen, AisFull, BisFull, clk);
+  input AisGreen, BisGreen, AisFull, BisFull, clk;
   output timeout;
   reg timeout;
-  reg [2:0] emptiness; //mandatory for counting, not just for debugging
+  reg [2:0] emptiness;
 
   always @ (posedge clk)
   #1

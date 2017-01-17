@@ -1,4 +1,5 @@
 module man(A, B, R, CLK, AL, BL, M);
+  
   input A, B, R, CLK;
   output reg AL, BL, M;
 
