@@ -2,7 +2,7 @@
 -- Author:        Mohammad Mahdi Rahimi (mohammadmahdi76@gmail.com)
 --
 -- Create Date:   20-04-2017
--- Module Name:   ALU.vhd
+-- Module Name:   DataPath.vhd
 --------------------------------------------------------------------------------
 library IEEE;
 use IEEE.std_logic_1164.all;
@@ -41,6 +41,17 @@ architecture behav of DataPath is
 		output: OUT std_logic_vector (5 DOWNTO 0)
     );
     end component;
+
+    component RegisterFile is
+	port (
+		clk, RFSWrite, RFDWrite : in std_logic ;
+		WPAddress : in std_logic_vector(5 downto 0) ;
+		Shadow : in std_logic_vector(3 downto 0) ;
+		data_in : in std_logic_vector(15 downto 0) ;
+		RSOutPut : out std_logic_vector(15 downto 0) ;
+		RDOutPut : out std_logic_vector(15 downto 0)
+	) ;
+	end component;
 
 begin
 
