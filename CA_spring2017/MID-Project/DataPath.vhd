@@ -33,7 +33,15 @@ architecture behav of DataPath is
     );
     end component;
 
-    
+    component WindowPointer is 
+	PORT (
+		WPLoad, WPReset, WPAdd : IN std_logic;
+		input: IN std_logic_vector (5 DOWNTO 0);
+		clk : IN std_logic;
+		output: OUT std_logic_vector (5 DOWNTO 0)
+    );
+    end component;
+
 begin
 
 
