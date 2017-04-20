@@ -53,6 +53,21 @@ architecture behav of DataPath is
 	) ;
 	end component;
 
+    component ALU is
+        port (
+            clk : in std_logic;
+            zeroIN, carryIN : in std_logic;
+            zeroOut, carryOut : out std_logic;
+            ALUOut : out std_logic_vector(15 downto 0) ;
+            A, B : in std_logic_vector(15 downto 0) ;
+            B15to0 : in std_logic;
+            AandB, AorB, AxorB, NotB : in std_logic;
+            AaddB, AsubB, AmulB, AdivB : in std_logic;
+            ShrB, ShlB : in std_logic;
+            AcmpB : in std_logic 
+        ) ;
+    end component ;
+
 	component Flags is
 	port (
 		clk : in std_logic;

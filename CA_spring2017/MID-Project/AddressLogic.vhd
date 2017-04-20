@@ -33,11 +33,11 @@ BEGIN
     BEGIN
 	temp := (ResetPC & PCplusI & PCplus1 & RplusI & Rplus0);
 	CASE temp IS
-	    WHEN one => result <= (OTHERS => '0');
-	    WHEN two => result <= unsigned(PCside) + unsigned(Iside);
-	    WHEN three => result <= unsigned(PCside) + 1;
-	    WHEN four => result <= unsigned(Rside) + unsigned(Iside);
-	    WHEN five => result <= unsigned(Rside);
+	    WHEN one    => result <= (OTHERS => '0');
+	    WHEN two    => result <= unsigned(PCside) + unsigned(Iside);
+	    WHEN three  => result <= unsigned(PCside) + 1;
+	    WHEN four   => result <= unsigned(Rside)  + unsigned(Iside);
+	    WHEN five   => result <= unsigned(Rside);
 	    WHEN OTHERS => result <= unsigned(PCside);
 	END CASE;
 	ALout <= std_logic_vector(result(15 downto 0));

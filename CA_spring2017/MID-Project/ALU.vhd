@@ -9,9 +9,18 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 entity ALU is
-  port (
-	clock
-  ) ;
+	port (
+		clk : in std_logic;
+		zeroIN, carryIN : in std_logic;
+		zeroOut, carryOut : out std_logic;
+		ALUOut : out std_logic_vector(15 downto 0) ;
+		A, B : in std_logic_vector(15 downto 0) ;
+		B15to0 : in std_logic;
+		AandB, AorB, AxorB, NotB : in std_logic;
+		AaddB, AsubB, AmulB, AdivB : in std_logic;
+		ShrB, ShlB : in std_logic;
+		AcmpB : in std_logic 
+	) ;
 end entity ; -- ALU
 
 architecture behav of ALU is
@@ -47,10 +56,13 @@ architecture behav of ALU is
 			carry : out std_logic
 		) ;
 	end component ;
-
-
 begin
+	ALU_Procces : process( clk )
+	begin
+		if clk'event and clk = '1' then 
 
+		end if;
+	end process ; -- ALU_Procces
 
 
 end architecture ; -- behav
