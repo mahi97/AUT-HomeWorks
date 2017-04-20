@@ -15,42 +15,44 @@ entity ALU is
 		zeroOut, carryOut : out std_logic;
 		ALUOut : out std_logic_vector(15 downto 0) ;
 		A, B : in std_logic_vector(15 downto 0) ;
-		B15to0 : in std_logic;
-		AandB, AorB, AxorB, NotB : in std_logic;
-		AaddB, AsubB, AmulB, AdivB : in std_logic;
-		ShrB, ShlB : in std_logic;
-		AcmpB : in std_logic 
+		opcode : in std_logic_vector(3 downto 0)
 	) ;
 end entity ; -- ALU
 
 architecture behav of ALU is
 
 	component AND16bit is
-		port(clk : in std_logic;
+		port(
 		data1, data2 : in std_logic_vector(15 downto 0);
 		data_out : out std_logic_vector(15 downto 0)
-	    );
+		);
 	end component;
 
 	component OR16bit is
-	    port(clk : in std_logic;
-	        data1, data2 : in std_logic_vector(15 downto 0);
-	        data_out :out std_logic_vector(15 downto 0)
-	    );
+		port(
+			data1, data2 : in std_logic_vector(15 downto 0);
+			data_out :out std_logic_vector(15 downto 0)
+		);
+	end component;
+
+	component XOR16bit is
+		port(
+			data1, data2 : in std_logic_vector(15 downto 0);
+			data_out : out std_logic_vector(15 downto 0)
+		);
 	end component;
 
 	component AdderSubtractor is
-	    port(clk : in  std_logic;
-	        OP   : in  std_logic;
-	        A, B : in  std_logic_vector(15 downto 0);
-	        Res  : out std_logic_vector(15 downto 0);
-	        Cout, OVERFLOW : out std_logic
-	    );
+		port(
+			OP   : in  std_logic;
+			A, B : in  std_logic_vector(15 downto 0);
+			Res  : out std_logic_vector(15 downto 0);
+			Cout, OVERFLOW : out std_logic
+		);
 	end component;
 
 	component Comparision is
 		port (
-			clk : in std_logic;
 			RS, RD : in std_logic_vector(15 downto 0) ;
 			zero : out std_logic;
 			carry : out std_logic

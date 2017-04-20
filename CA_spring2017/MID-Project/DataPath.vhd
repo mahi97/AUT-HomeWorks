@@ -60,11 +60,7 @@ architecture behav of DataPath is
             zeroOut, carryOut : out std_logic;
             ALUOut : out std_logic_vector(15 downto 0) ;
             A, B : in std_logic_vector(15 downto 0) ;
-            B15to0 : in std_logic;
-            AandB, AorB, AxorB, NotB : in std_logic;
-            AaddB, AsubB, AmulB, AdivB : in std_logic;
-            ShrB, ShlB : in std_logic;
-            AcmpB : in std_logic 
+            opcode : in std_logic_vector(3 downto 0)
         ) ;
     end component ;
 
