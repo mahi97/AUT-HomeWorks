@@ -53,6 +53,15 @@ architecture behav of DataPath is
 	) ;
 	end component;
 
+	component Flags is
+	port (
+		clk : in std_logic;
+		Zin, Cin : in std_logic;
+		CSet, CReset, ZSet, ZReset, SRload : in std_logic;
+		Cout, Zout : out std_logic
+	) ;
+	end component ;
+
 begin
 
 
