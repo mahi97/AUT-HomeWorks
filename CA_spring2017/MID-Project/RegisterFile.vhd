@@ -9,14 +9,14 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 entity RegisterFile is
-  port (
-	clk, RFSWrite, RFDWrite : in std_logic ;
-	WPAddress : in std_logic_vector(5 downto 0) ;
-	Shadow : in std_logic_vector(3 downto 0) ;
-	data_in : in std_logic_vector(15 downto 0) ;
-	RSOutPut : out std_logic_vector(15 downto 0) ;
-	RDOutPut : out std_logic_vector(15 downto 0)
-  ) ;
+	port (
+		clk, RFSWrite, RFDWrite : in std_logic ;
+		WPAddress : in std_logic_vector(5 downto 0) ;
+		Shadow : in std_logic_vector(3 downto 0) ;
+		data_in : in std_logic_vector(15 downto 0) ;
+		RSOutPut : out std_logic_vector(15 downto 0) ;
+		RDOutPut : out std_logic_vector(15 downto 0)
+	) ;
 end entity ; -- RegisterFile
 
 architecture behav of RegisterFile is
