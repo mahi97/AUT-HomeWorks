@@ -24,7 +24,16 @@ architecture behav of DataPath is
     );
     end component;
 
+    component InstructionRegister is 
+    PORT (
+		IRLoad : IN std_logic;
+		input: IN std_logic_vector (15 DOWNTO 0);
+		clk : IN std_logic;
+		output: OUT std_logic_vector (15 DOWNTO 0)
+    );
+    end component;
 
+    
 begin
 
 

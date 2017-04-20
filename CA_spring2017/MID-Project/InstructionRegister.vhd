@@ -7,18 +7,26 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
+
 entity InstructionRegister is
-  port (
-	clock
-  ) ;
+    PORT (
+		IRLoad : IN std_logic;
+		input: IN std_logic_vector (15 DOWNTO 0);
+		clk : IN std_logic;
+		output: OUT std_logic_vector (15 DOWNTO 0)
+    );
 end entity ; -- InstructionRegister
 
-architecture arch of InstructionRegister is
-
-
-
+architecture dataflow of InstructionRegister is
 begin
 
+	process( clk ) 
+	begin
+		if(clk='1' and clk'event) then
+			if (IRLoad = '1') then
+				output <= input;
+			end if;
+		end if;	
+	end process ; 
 
-
-end architecture ; -- arch
+end architecture ; -- dataflow

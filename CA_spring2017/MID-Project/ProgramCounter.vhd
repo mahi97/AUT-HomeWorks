@@ -19,7 +19,7 @@ END ProgramCounter;
 
 ARCHITECTURE dataflow OF ProgramCounter IS BEGIN
     PROCESS (clk) BEGIN
-	IF (clk = '1') THEN
+	if(clk='1' and clk'event) then
 	    IF (EnablePC = '1') THEN
 		output <= input;
 	    END IF;
