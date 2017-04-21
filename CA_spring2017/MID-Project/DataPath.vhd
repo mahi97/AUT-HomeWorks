@@ -52,7 +52,7 @@ architecture behav of DataPath is
 		clk : IN std_logic;
         WPLoad, WPReset, WPAdd : IN std_logic;
         input: IN std_logic_vector (5 DOWNTO 0);
-		output: OUT std_logic_vector (5 DOWNTO 0)
+		output: buffer std_logic_vector (5 DOWNTO 0)
     );
     end component;
 
@@ -100,7 +100,6 @@ signal addressUnit_RSide : std_logic_vector(15 downto 0) ;
 signal addressUnit_ISide : std_logic_vector(7 downto 0) ;
 signal addressUnit_address : std_logic_vector(15 downto 0) ;
 
-
 begin
     flgs : Flags port map ( clk, zeroIN, carryIN,
                             CSet, CReset, ZSet, ZReset, SRload,
@@ -135,5 +134,44 @@ begin
                                     addressUnit_ISide,
                                     addressUnit_address,
                                     RplusI, Rplus0, EnablePC);
+
+
+
+    datapath_pro : process( clk, ext_reset )
+    begin
+        -- handle dataBus
+        if Address_on_dataBus = '1' then
+            dataBus <= addressUnit_address;
+        elsif ALUOut_on_dataBus = '1' then
+            dataBus <= ALUOut;
+        end if;
+
+        -- handle Rside of address unit
+        if RS_on_addressUnit_RSide = '1' then
+            addressUnit_RSide <= RS;
+        elsif RD_on_addressUnit_RSide = '1' then
+            addressUnit_RSide <= RD;
+        end if;
+
+        -- handle shadow
+        if shadow = '1' then 
+            shadow_data <= IRout_data(11 downto 8);
+        else
+            shadow_data <= IRout_data(3 downto 0);
+        end if;
+
+        -- handle flags signal
+        Zout <= zeroOut;
+        Cout <= carryOut;
+
+        -- handle Instruction
+        IRout <= IRout_data;
+        WPinput <= IRout_data(5 downto 0);
+        addressUnit_ISide <= IRout_data(7 downto 0);
+
+        -- window pointer
+        WPAddress <= WPoutput;
+
+    end process ; -- datapath_pro
 
 end architecture ; -- behav
