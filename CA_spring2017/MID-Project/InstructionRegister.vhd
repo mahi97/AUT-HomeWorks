@@ -10,9 +10,9 @@ use IEEE.numeric_std.all;
 
 entity InstructionRegister is
     PORT (
+		clk : IN std_logic;
 		IRLoad : IN std_logic;
 		input: IN std_logic_vector (15 DOWNTO 0);
-		clk : IN std_logic;
 		output: OUT std_logic_vector (15 DOWNTO 0)
     );
 end entity ; -- InstructionRegister

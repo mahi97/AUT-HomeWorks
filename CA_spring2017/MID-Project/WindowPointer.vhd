@@ -9,9 +9,9 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 entity WindowPointer is
 	PORT (
+		clk : IN std_logic;
 		WPLoad, WPReset, WPAdd : IN std_logic;
 		input: IN std_logic_vector (5 DOWNTO 0);
-		clk : IN std_logic;
 		output: OUT std_logic_vector (5 DOWNTO 0)
     );
 end entity ; -- WindowPointer
