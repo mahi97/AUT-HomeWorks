@@ -14,14 +14,14 @@ entity DataPath is
         IRout : out std_logic_vector(15 downto 0) ;
         IRLoad : in std_logic;
         CSet, CReset, ZSet, ZReset, SRload : in std_logic; -- Flags
-        WPAdd, WPReset : in std_logic; -- Window Pointer
+        WPAdd, WPReset, WPLoad : in std_logic; -- Window Pointer
         ResetPC, PCplus1, PCplusI, Rplus0, RplusI, EnablePC : in std_logic; -- Address Unit
         opcode : in std_logic_vector(3 downto 0) ; -- ALU
         shadow : in std_logic; -- shadow instruction
         RFSWrite, RFDWrite : in std_logic; -- register file
         ALUOut_on_dataBus : in std_logic; -- ALU
-        RS_on_addressUnit_RSide, RD_on_addressUnit_RSide : in std_logic -- register file
-        Address_on_dataBus : in std_logic,
+        RS_on_addressUnit_RSide, RD_on_addressUnit_RSide : in std_logic; -- register file
+        Address_on_dataBus : in std_logic;
         addressBus : out std_logic_vector(15 downto 0) ;
         dataBus : inout std_logic_vector(15 downto 0)
     ) ;
@@ -87,8 +87,53 @@ architecture behav of DataPath is
 	) ;
 	end component ;
 
+signal zeroIN, carryIN : std_logic;
+signal zeroOut, carryOut : std_logic;
+signal ALUOut : std_logic_vector(15 downto 0) ;
+signal RS, RD : std_logic_vector(15 downto 0) ;
+signal WPAddress : std_logic_vector(5 downto 0) ;
+signal shadow_data : std_logic_vector(3 downto 0) ;
+signal WPinput : std_logic_vector(5 downto 0) ;
+signal WPoutput : std_logic_vector(5 downto 0) ;
+signal IRout_data : std_logic_vector(15 downto 0) ;
+signal addressUnit_RSide : std_logic_vector(15 downto 0) ;
+signal addressUnit_ISide : std_logic_vector(7 downto 0) ;
+signal addressUnit_address : std_logic_vector(15 downto 0) ;
+
 
 begin
+    flgs : Flags port map ( clk, zeroIN, carryIN,
+                            CSet, CReset, ZSet, ZReset, SRload,
+                            carryOut, zeroOut);
 
+    alu_instancd : ALU port map (clk,
+                                 zeroOut, carryOut,
+                                 zeroIN, carryIN,
+                                 ALUOut,
+                                 RS, RD,
+                                 opcode);
+
+    regfile : RegisterFile port map (clk, RFSWrite, RFDWrite,
+                                     WPAddress,
+                                     shadow_data,
+                                     dataBus,
+                                     RS,
+                                     RD);
+
+    wp : WindowPointer port map (clk, 
+                                 WPLoad, WPReset, WPAdd,
+                                 WPinput,
+                                 WPoutput);
+
+    instReg : InstructionRegister port map (clk,
+                                            IRLoad,
+                                            dataBus,
+                                            IRout_data);
+
+    addUnit : AddressUnit port map (clk, ResetPC, PCplusI, PCplus1,
+                                    addressUnit_RSide,
+                                    addressUnit_ISide,
+                                    addressUnit_address,
+                                    RplusI, Rplus0, EnablePC);
 
 end architecture ; -- behav
