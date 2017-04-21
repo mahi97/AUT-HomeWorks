@@ -12,7 +12,7 @@ entity WindowPointer is
 		clk : IN std_logic;
 		WPLoad, WPReset, WPAdd : IN std_logic;
 		input: IN std_logic_vector (5 DOWNTO 0);
-		output: OUT std_logic_vector (5 DOWNTO 0)
+		output: buffer std_logic_vector (5 DOWNTO 0)
     );
 end entity ; -- WindowPointer
 
@@ -25,8 +25,8 @@ begin
 			output <= (OTHERS => '0');
 		elsif (WPLoad = '1') then
 			output <= input;
-		elsif (WPAdd = '1') then -- TODO : FIX THIS
-			output <= input;
+		elsif (WPAdd = '1') then
+			output <= std_logic_vector(unsigned(output) + unsigned(input));
 		end if;
 	end if;
 			
