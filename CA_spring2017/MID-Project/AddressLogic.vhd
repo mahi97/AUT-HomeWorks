@@ -38,7 +38,7 @@ BEGIN
 	    WHEN three  => result <= unsigned(PCside) + 1;
 	    WHEN four   => result <= unsigned(Rside)  + unsigned(Iside);
 	    WHEN five   => result <= unsigned(Rside);
-	    WHEN OTHERS => result <= unsigned(PCside);
+	    WHEN OTHERS => result <= (OTHERS => '0');
 	END CASE;
 	ALout <= std_logic_vector(result(15 downto 0));
     END PROCESS;

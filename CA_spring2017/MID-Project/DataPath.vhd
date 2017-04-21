@@ -23,6 +23,7 @@ entity DataPath is
         RS_on_addressUnit_RSide, RD_on_addressUnit_RSide : in std_logic; -- register file
         Address_on_dataBus : in std_logic;
         addressBus : out std_logic_vector(15 downto 0) ;
+        data : in std_logic_vector(7 downto 0) ;
         dataBus : inout std_logic_vector(15 downto 0)
     ) ;
 end entity ; -- DataPath
@@ -74,6 +75,8 @@ architecture behav of DataPath is
             zeroOut, carryOut : out std_logic;
             ALUOut : out std_logic_vector(15 downto 0) ;
             A, B : in std_logic_vector(15 downto 0) ;
+            shadow : in std_logic;
+            shadow_data : in std_logic_vector(7 downto 0) ;
             opcode : in std_logic_vector(3 downto 0)
         ) ;
     end component ;
@@ -100,6 +103,7 @@ signal addressUnit_RSide : std_logic_vector(15 downto 0) ;
 signal addressUnit_ISide : std_logic_vector(7 downto 0) ;
 signal addressUnit_address : std_logic_vector(15 downto 0) ;
 
+
 begin
     flgs : Flags port map ( clk, zeroIN, carryIN,
                             CSet, CReset, ZSet, ZReset, SRload,
@@ -110,6 +114,8 @@ begin
                                  zeroIN, carryIN,
                                  ALUOut,
                                  RS, RD,
+                                 shadow,
+                                 data,
                                  opcode);
 
     regfile : RegisterFile port map (clk, RFSWrite, RFDWrite,
@@ -137,41 +143,46 @@ begin
 
 
 
-    datapath_pro : process( clk, ext_reset )
+    datapath_pro : process( clk )
     begin
-        -- handle dataBus
-        if Address_on_dataBus = '1' then
-            dataBus <= addressUnit_address;
-        elsif ALUOut_on_dataBus = '1' then
-            dataBus <= ALUOut;
+        if (clk'event and clk = '1') then
+            if (ext_reset = '1') then
+                -- TODO : RESET
+            else
+                -- handle dataBus
+                if Address_on_dataBus = '1' then
+                    dataBus <= addressUnit_address;
+                elsif ALUOut_on_dataBus = '1' then
+                    dataBus <= ALUOut;
+                end if;
+
+                -- handle Rside of address unit
+                if RS_on_addressUnit_RSide = '1' then
+                    addressUnit_RSide <= RS;
+                elsif RD_on_addressUnit_RSide = '1' then
+                    addressUnit_RSide <= RD;
+                end if;
+
+                -- handle shadow
+                if shadow = '1' then 
+                    shadow_data <= IRout_data(11 downto 8);
+                else
+                    shadow_data <= IRout_data(3 downto 0);
+                end if;
+
+                -- handle flags signal
+                Zout <= zeroOut;
+                Cout <= carryOut;
+
+                -- handle Instruction
+                IRout <= IRout_data;
+                WPinput <= IRout_data(5 downto 0);
+                addressUnit_ISide <= IRout_data(7 downto 0);
+
+                -- window pointer
+                WPAddress <= WPoutput;
+            end if;
         end if;
-
-        -- handle Rside of address unit
-        if RS_on_addressUnit_RSide = '1' then
-            addressUnit_RSide <= RS;
-        elsif RD_on_addressUnit_RSide = '1' then
-            addressUnit_RSide <= RD;
-        end if;
-
-        -- handle shadow
-        if shadow = '1' then 
-            shadow_data <= IRout_data(11 downto 8);
-        else
-            shadow_data <= IRout_data(3 downto 0);
-        end if;
-
-        -- handle flags signal
-        Zout <= zeroOut;
-        Cout <= carryOut;
-
-        -- handle Instruction
-        IRout <= IRout_data;
-        WPinput <= IRout_data(5 downto 0);
-        addressUnit_ISide <= IRout_data(7 downto 0);
-
-        -- window pointer
-        WPAddress <= WPoutput;
-
     end process ; -- datapath_pro
 
 end architecture ; -- behav

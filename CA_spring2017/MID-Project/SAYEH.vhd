@@ -35,6 +35,7 @@ component Controller is
 		readMem, writeMem, readIO, writeIO : out std_logic; -- memory and IO
 		ALUOut_on_dataBus : out std_logic; -- ALU
 		RS_on_addressUnit_RSide, RD_on_addressUnit_RSide : out std_logic; -- register file
+        data : out std_logic_vector(7 downto 0) ;
 		Address_on_dataBus : out std_logic
 	) ;
 end component ; -- Controller
@@ -55,6 +56,7 @@ component DataPath is
 		RS_on_addressUnit_RSide, RD_on_addressUnit_RSide : in std_logic; -- register file
 		Address_on_dataBus : in std_logic;
         addressBus : out std_logic_vector(15 downto 0) ;
+        data : in std_logic_vector(7 downto 0) ;
         dataBus : inout std_logic_vector(15 downto 0)
 	) ;
 end component ; -- DataPath
@@ -71,6 +73,7 @@ signal RFSWrite, RFDWrite : std_logic; -- register file
 signal ALUOut_on_dataBus : std_logic; -- ALU
 signal RS_on_addressUnit_RSide, RD_on_addressUnit_RSide : std_logic; -- register file
 signal Address_on_dataBus : std_logic;
+signal ctrl_data : std_logic_vector(7 downto 0) ;
 
 begin
 	dp 	: DataPath   port map ( clk, externalReset,
@@ -87,6 +90,7 @@ begin
                                 RS_on_addressUnit_RSide, RD_on_addressUnit_RSide,
                                 Address_on_dataBus,
                                 addressBus,
+                                ctrl_data,
                                 dataBus);
 
 	ctl : Controller port map ( clk, externalReset,
@@ -103,6 +107,7 @@ begin
 								readMem, writeMem, readIO, writeIO,
 								ALUOut_on_dataBus,
 								RS_on_addressUnit_RSide, RD_on_addressUnit_RSide,
+                                ctrl_data,
 								Address_on_dataBus);
 
 

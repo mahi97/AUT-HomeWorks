@@ -23,12 +23,13 @@ entity Controller is
 		readMem, writeMem, readIO, writeIO : out std_logic; -- memory and IO
 		ALUOut_on_dataBus : out std_logic; -- ALU
 		RS_on_addressUnit_RSide, RD_on_addressUnit_RSide : out std_logic; -- register file
+		data : out std_logic_vector(7 downto 0) ;
 		Address_on_dataBus : out std_logic
 	) ;
 end entity ; -- Controller
 
 architecture RTL of Controller is
-	type state is (S0, S1, S2, S3, S4);
+	type state is (S0, S1, S2, S3, S4, S5, S6, SH);
 	signal current_state : state;
 	signal next_state : state;
 begin
@@ -47,12 +48,160 @@ begin
 	begin
 		case current_state is
 			when S0 =>
-				
+				readMem <= '1';
+				writeMem <= '0';
+				ResetPC <= '1';
+				IRLoad <= '0';
+				CReset <= '1';
+				ZReset <= '1';
+				CSet <= '0';
+				ZSet <= '0';
+				SRload <= '0';
+				WPReset <= '1';
+				WPAdd <= '0';
+				WPLoad <= '0';
+				EnablePC <= '1';
+				PCplus1 <= '0';
+				PCplusI <= '0';
+				Rplus0 <= '0';
+				RplusI <= '0';
+				shadow <= '0';
+				Address_on_dataBus <= '0';
+				ALUOut_on_dataBus <= '0';
+				RS_on_addressUnit_RSide <= '0';
+				RD_on_addressUnit_RSide <= '0';
+				RFSWrite <= '0';
+				RFDWrite <= '0';
+
+				next_state <= S1;
 			when S1 =>
-				
+				readMem <= '0';
+				IRLoad <= '1';
+				ResetPC <= '0';
+				IRLoad <= '0';
+				CReset <= '0';
+				ZReset <= '0';
+				WPReset <= '0';
+				next_state <= S2;
 			when S2 =>
+				IRLoad <= '0';
+				data <= IRout(15 downto 8);
+				if IRout(15 downto 12) = "1111" 
+				or (IRout(15 downto 12) = "0000" and IRout(11 downto 10) = "10")
+				or (IRout(15 downto 8 ) = "00000111") then
+					shadow <= '1';
+				end if;
+				next_state <= S3;
 			when S3 =>
+				if IRout(15 downto 12) = "0000" then
+					case( IRout(11 downto 8) ) is
+						when "0000" =>
+						when "0001" =>
+							next_state <= SH;
+						when "0010" =>
+							ZSet <= '1';
+						when "0011" =>
+							ZReset <= '1';
+						when "0100" =>
+							CSet <= '1';
+						when "0101" =>
+							CReset <= '1';
+						when "0110" =>
+							WPReset <= '1';
+						when "0111" =>
+							EnablePC <= '1';
+							PCplusI <= '1';
+						when "1000" =>
+							if Zout = '1' then
+								EnablePC <= '1';
+								PCplusI <= '1';
+							end if;
+						when "1001" =>
+							if Cout = '1' then
+								EnablePC <= '1';
+								PCplusI <= '1';
+							end if;
+						when "1010" =>
+							WPAdd <= '1';
+						when others =>
+					end case ;
+				elsif IRout(15 downto 12) = "1111" then
+					case( IRout(9 downto 8) ) is
+					
+						when "00" =>
+							ALUOut_on_dataBus <= '1';
+							RFDWrite <= '1';
+						when "01" =>
+							ALUOut_on_dataBus <= '1';
+							RFDWrite <= '1';
+						when "10" =>
+							Address_on_dataBus <= '1';
+							PCplusI <= '1';
+							RFDWrite <= '1';
+						when "11" =>
+							RD_on_addressUnit_RSide <= '1';
+							RplusI <= '1';
+							EnablePC <= '1';
+						when others =>
+					
+					end case ;
+				else
+					case( IRout(15 downto 12) ) is
+						when "0001" => -- MOVE
+							ALUOut_on_dataBus <= '1';
+							RFDWrite <= '1';
+						when "0010" => -- LOAD
+							RS_on_addressUnit_RSide <= '1';
+							RFDWrite <= '1';
+							readMem <= '1';
+							Rplus0 <= '1';
+						when "0011" => -- STORE
+							ALUOut_on_dataBus <= '1';
+							RD_on_addressUnit_RSide <= '1';
+							writeMem <= '1';
+							Rplus0 <= '1';
+						when "0100" => -- IN PORT
+
+						when "0101" => -- OUT PORT
+						when "0110" => -- AND
+							ALUOut_on_dataBus <= '1';
+							RFDWrite <= '1';
+						when "0111" =>
+							ALUOut_on_dataBus <= '1';
+							RFDWrite <= '1';
+						when "1000" =>
+							ALUOut_on_dataBus <= '1';
+							RFDWrite <= '1';
+						when "1001" =>
+							ALUOut_on_dataBus <= '1';
+							RFDWrite <= '1';
+						when "1010" =>
+							ALUOut_on_dataBus <= '1';
+							RFDWrite <= '1';
+						when "1011" =>
+							ALUOut_on_dataBus <= '1';
+							RFDWrite <= '1';
+						when "1100" =>
+							ALUOut_on_dataBus <= '1';
+							RFDWrite <= '1';
+						when "1101" =>
+							ALUOut_on_dataBus <= '1';
+							RFDWrite <= '1';
+						when "1110" => -- CMP 
+
+						when others =>
+					
+					end case ;
+				end if;
+				shadow <= '0';
+				data <= IRout(7 downto 0);
+
+
 			when S4 =>
+			when S5 =>
+			when S6 =>
+			when SH =>
+
 		end case;
 	end process;
 end architecture ; -- RTL
