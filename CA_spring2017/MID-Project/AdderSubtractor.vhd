@@ -26,12 +26,11 @@ architecture arch of AdderSubtractor is
         );
     end component;
 
-    signal C1, C2, C3, C4 , C5, C6, C7, C8 : std_logic;
     signal TMP , TRes: std_logic_vector(15 downto 0);
     signal C : std_logic_vector(16 downto 0) ;
 
 begin
-
+    C(0) <= OP;
     L0 : for i in 0 to 15 generate
         FAX  : FullAdder port map(A(i), TMP(i), C(i), TRes(i), C(i + 1));    
         TMP(i) <= C(0) xor B(i);
