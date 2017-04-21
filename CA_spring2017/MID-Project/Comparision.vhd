@@ -18,11 +18,6 @@ end entity ; -- Comparision
 
 architecture arch of Comparision is
 begin
-	if (unsigned(RD) = unsigned(RS)) then
-		zero  <= '1';
-		carry <= '0';
-	elsif (unsigned(RD) < unsigned(RS)) then
-		zero  <= '0';
-		carry <= '1';
-	end if;
+	zero  <= '1' when (to_integer(unsigned(RD)) = to_integer(unsigned(RS))) else '0';
+	carry <= '1' when (to_integer(unsigned(RD)) < to_integer(unsigned(RS))) else '0';
 end architecture ; -- arch
